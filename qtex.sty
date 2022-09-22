@@ -1,0 +1,230 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{qtex}
+\RequirePackage{tikz}
+\RequirePackage{pgf}
+\RequirePackage{xargs}
+\usetikzlibrary{calc,arrows,knots}
+%\usepackage[dvipsnames]{xcolor}
+
+\def\qlegoscale{1}
+\def\qlegorotate{0}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\twoqubit}{O{} O{} O{} m}{
+    \parser[#4]
+    \exp_args:Nooo\dupgate{\@twoqubit[#1][#2]}{\x}{\y}
+}
+
+\NewDocumentCommand{\varswap}{O{} O{} O{1} m}{
+    \parser[#4]
+    \exp_args:Nooo\dupgate{\@varswap[#1][#2][#3]}{\x}{\y}
+}
+
+\NewDocumentCommand{\grid}{O{} m m}{
+    \parser[#3]
+    \exp_args:Nooo\dupgate{\@grid[#1]{#2}}{\x}{\y}
+}
+
+\NewDocumentCommand{\gate}{O{} O{} O{1} O{1} m}{
+    \parser[#5]
+    \exp_args:Nooo\dupgate{\@gate[#1][#2][#3][#4]}{\x}{\y}
+}
+
+\NewDocumentCommand{\qubit}{O{} O{} O{} m}{
+    \parser[#4]
+    \exp_args:Nooo\dupgate{\@qubit[#1][#2]}{\x}{\y}
+}
+
+\NewDocumentCommand{\ctrl}{tr o O{} O{1} m}{
+    \parser[#5]
+    \exp_args:Nooo\dupgate{\@ctrl[#2][#3][#4]}{\x}{\y}
+}
+
+\NewDocumentCommand{\ctrlr}{tr o O{} O{1} m}{
+    \parser[#5]
+    \exp_args:Nooo\dupgate{\@ctrlr[#2][#3][#4]}{\x}{\y}
+}
+
+\NewDocumentCommand{\paulix}{O{} O{} O{} m}{
+    \parser[#4]
+    \exp_args:Nooo\dupgate{\@paulix}{\x}{\y}
+}
+
+\NewDocumentCommand{\meter}{O{} O{} O{} m}{
+    \parser[#4]
+    \exp_args:Nooo\dupgate{\@meter}{\x}{\y}
+}
+
+\NewDocumentCommand{\swap}{O{} O{} m}{
+    \parser[#3]
+    \exp_args:Nooo\dupgate{\@swap[#1][#2]}{\x}{\y}
+}
+
+\ExplSyntaxOff
+
+
+
+
+\NewDocumentCommand{\@grid}{O{} m m}
+{
+\coordinate (a) at (#3);
+\coordinate (b) at ($(#3) + (0, #2)$);
+\draw ([scale=\qlegoscale, rotate=\qlegorotate] a) -- ([scale=\qlegoscale, rotate=\qlegorotate] b);
+}
+
+
+
+\NewDocumentCommand{\@gate}{ O{} O{} O{1} O{1} m}{
+\coordinate (a) at ($ (#5) +(-0.25,#4/2-0.5)$);
+\node[rectangle, draw=black, fill=white, minimum height=-0.5cm+#4cm, minimum width=-0.5 cm +#3 cm, anchor=west, scale=\qlegoscale, rotate=\qlegorotate, #1,label=#2] at ([scale=\qlegoscale,rotate=\qlegorotate] a) {};
+}
+
+
+
+\NewDocumentCommand{\@qubit}{O{} O{} m}{
+\coordinate (center) at (#3);
+\node[circle, draw=black, fill=white, minimum size=0.5cm, scale=\qlegoscale,#1,label={#2}] at ([scale=\qlegoscale, rotate=\qlegorotate] center) {};
+}
+
+
+
+\NewDocumentCommand{\@ctrl}{o O{} O{1} m}{
+\coordinate (a) at (#4);
+\coordinate (b) at ($(#4) + (#3,0)$);
+\node[circle, fill=black, minimum size=6, inner sep=0, scale=\qlegoscale] at ([scale=\qlegoscale, rotate=\qlegorotate] a) {};
+\IfNoValueF{#1}{
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] a) -- ([scale=\qlegoscale, rotate=\qlegorotate] b);
+    \expandafter\csname @#1\endcsname #2{b}
+}
+}
+
+\NewDocumentCommand{\@ctrlr}{o O{} O{1} m}{
+\coordinate (a) at (#4);
+\coordinate (b) at ($(#4) + (#3,0)$);
+
+\IfNoValueF{#1}{
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] a) -- ([scale=\qlegoscale, rotate=\qlegorotate] b);
+    \expandafter\csname @#1\endcsname #2{b}
+}
+\coordinate (a) at (#4);
+\node[circle, draw=black, fill=white, minimum size=6, inner sep=0, scale=\qlegoscale] at ([scale=\qlegoscale, rotate=\qlegorotate] a) {};
+}
+
+
+
+
+\NewDocumentCommand{\@paulix}{m}{
+\coordinate (a) at (#1);
+\node[circle, draw=black, fill=white, minimum size=8, inner sep=0, scale=\qlegoscale] at ([scale=\qlegoscale, rotate=\qlegorotate] a) {};
+\draw ([scale=\qlegoscale, rotate=\qlegorotate] $(a)-(0,-4pt)$) -- ([scale=\qlegoscale, rotate=\qlegorotate] $(a)-(0,4pt)$);
+\draw ([scale=\qlegoscale, rotate=\qlegorotate] $(a)-(-4pt,0)$) -- ([scale=\qlegoscale, rotate=\qlegorotate] $(a)-(4pt,0)$);
+}
+
+
+
+\NewDocumentCommand{\@meter}{m}{
+\coordinate (center) at (#1);
+\node[rectangle, draw=black, fill=white, thick, minimum size=0.5cm, inner sep=0, scale=\qlegoscale,rotate=\qlegorotate] at ([scale=\qlegoscale, rotate=\qlegorotate] center) {};
+\coordinate (arrowleft) at ($([rotate=\qlegorotate] center) + (0,-0.15)$);
+\coordinate (arrowright) at ($([rotate=\qlegorotate] center) + (0.15,0.1)$);
+\draw [-stealth]([scale=\qlegoscale] arrowleft) -- ([scale=\qlegoscale] arrowright);
+\coordinate (tmp) at ($([rotate=\qlegorotate] center) + (-0.2,-0.1)$);
+\draw ([scale=\qlegoscale] tmp) arc (120:60:0.4*\qlegoscale);
+}
+
+
+
+\NewDocumentCommand{\@twoqubit}{O{} O{} m}{
+\coordinate (center) at ($(#3)+(0.5,0)$);
+
+\node[rectangle, fill=white, thick, minimum width=1.5cm, minimum height=1cm, inner sep=0, scale=\qlegoscale, rotate=\qlegorotate] at ([scale=\qlegoscale, rotate=\qlegorotate] center) {};
+\node[rectangle, draw=black, fill=white, thick, minimum size=0.5cm, inner sep=0, scale=\qlegoscale, rotate=\qlegorotate,#1, label=#2] at ([scale=\qlegoscale, rotate=\qlegorotate] center) (sq)  {};
+\draw (sq.south west) -- ($(sq.south west) + ([rotate=\qlegorotate](-0.25*\qlegoscale,-0.25*\qlegoscale)$);
+\draw (sq.north west) -- ($(sq.north west) + ([rotate=\qlegorotate](-0.25*\qlegoscale, 0.25*\qlegoscale)$);
+\draw (sq.south east) -- ($(sq.south east) + ([rotate=\qlegorotate](0.25*\qlegoscale, -0.25*\qlegoscale)$);
+\draw (sq.north east) -- ($(sq.north east) + ([rotate=\qlegorotate](0.25*\qlegoscale, 0.25*\qlegoscale)$);
+}
+
+
+
+\NewDocumentCommand{\@swap}{O{} O{} m}{
+\coordinate (center) at ($(#3)+(0.5,0)$);
+\node[rectangle, fill=white, thick, minimum width=1.5cm, minimum height=1cm, inner sep=0, scale=\qlegoscale, rotate=\qlegorotate, #1, label=#2] at ([scale=\qlegoscale, rotate=\qlegorotate] center) {};
+
+\coordinate (n1) at ($(center)+(-0.5,0.5)$);
+\coordinate (n2) at ($(center)+(0.5,-0.5)$);
+\draw  ([scale=\qlegoscale, rotate=\qlegorotate] n1) --  ([scale=\qlegoscale, rotate=\qlegorotate] n2);
+\coordinate (n1) at ($(center)+(-0.5,-0.5)$);
+\coordinate (n2) at ($(center)+(0.5,0.5)$);
+\draw[double=black, draw=white, double distance=0.5pt,thick]([scale=\qlegoscale,rotate=\qlegorotate] n1) -- ([scale=\qlegoscale,rotate=\qlegorotate] n2);
+}
+
+
+
+\NewDocumentCommand{\@varswap}{O{} O{} O{1} m}{
+    \coordinate (center1) at (#4);
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] $(center1) + (2.82pt,2.82pt)$) -- ([scale=\qlegoscale, rotate=\qlegorotate] $(center1) - (2.82pt,2.82pt)$) ;
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] $(center1) + (2.82pt,-2.82pt)$) -- ([scale=\qlegoscale, rotate=\qlegorotate] $(center1) - (2.82pt,-2.82pt)$);
+    
+    \coordinate (center2) at ($(#4)+(#3,0)$);
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] $(center2) + (2.82pt,2.82pt)$) -- ([scale=\qlegoscale, rotate=\qlegorotate] $(center2) - (2.82pt,2.82pt)$) ;
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] $(center2) + (2.82pt,-2.82pt)$) -- ([scale=\qlegoscale, rotate=\qlegorotate] $(center2) - (2.82pt,-2.82pt)$);
+    \draw ([scale=\qlegoscale, rotate=\qlegorotate] center1) -- ([scale=\qlegoscale, rotate=\qlegorotate] center2);
+}
+
+
+
+
+\NewDocumentCommand{\connect}{O{} O{0} m m}{
+\coordinate (a) at ([scale=\qlegoscale, rotate=\qlegorotate] #3);
+\coordinate (b) at ([scale=\qlegoscale, rotate=\qlegorotate] #4);
+\draw[#1] (a) -- ($(a)!#2!([rotate around =90:(a)] b)$) -- ++ ($(b)-(a)$) -- (b) ; ;
+}
+
+\NewDocumentCommand{\dashedbox}{O{} m m}{
+\coordinate (lowerleft) at ($(#2) + (-0.5,-0.5)$) ;
+\coordinate (upperright) at ($(#3) + (0.5, 0.5)$) ;
+\draw[rounded corners,draw=black, dashed, #1] ([scale=\qlegoscale, rotate=\qlegorotate] lowerleft) rectangle ([scale=\qlegoscale,rotate=\qlegorotate] upperright);
+}
+
+\def\parser[#1,#2]{
+    \def\x{#1}
+    \def\y{#2}
+}
+
+\NewDocumentCommand{\dupgate}{m   > { \SplitArgument{2} { ; } }m  > { \SplitArgument{2} { ; } }m}
+{ 
+\@dupgate{#1}#2#3
+}
+
+\NewDocumentCommand{\@dupgate}{m m m m m m m}{
+\IfValueTF{#3}
+      {\def\numx{#3}}
+      {\def\numx{1}}
+\IfValueTF{#4}
+      {\def\itx{#4}}
+      {\def\itx{1}}
+\IfValueTF{#6}
+      {\def\numy{#6}}
+      {\def\numy{1}}
+\IfValueTF{#7}
+      {\def\ity{#7}}
+      {\def\ity{1}}
+      
+\foreach \x in {1,...,\numx}
+\foreach \y in {1,...,\numy}
+{#1{#2+\x*\itx-\itx,#5+\y*\ity-\ity}}
+}
+
+
+%%%environment setting
+
+\NewDocumentEnvironment{qlego}{s O{1} O{}}
+{\IfBooleanTF {#1} {\def\qlegorotate{-90}} {\def\qlegorotate{0}}
+    \def\qlegoscale{#2}
+    \begin{tikzpicture}[baseline={([yshift=-.5ex]current bounding box.center)},#3]
+}
+{\end{tikzpicture}}
+
+
+

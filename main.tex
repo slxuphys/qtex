@@ -1,0 +1,98 @@
+\documentclass[aps,prl,showpacs,notitlepage,floatfix,superscriptaddress,nofootinbib]{revtex4-2}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bbm}
+%\usepackage{caption}
+\usepackage{graphicx}
+%\usepackage{subfig}
+\usepackage{braket}
+\usepackage{listings}
+\usepackage[colorlinks,linkcolor=blue,anchorcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[titletoc]{appendix}
+\newcommand{\SX}[1]{\textcolor{MidnightBlue}{SX:#1}}
+\usepackage{ifthen}
+
+\def\bea{\begin{equation}\begin{aligned}}
+\def\eea{\end{aligned}\end{equation}}
+\usepackage{qtex}
+
+
+%\usetikzlibrary{calc,arrows,knots}
+%\usepackage{lmodern,adjustbox}
+
+\usepackage[skins,breakable]{tcolorbox}
+
+\tcbuselibrary{listings}
+\tcbuselibrary{breakable}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+
+\newtcolorbox{Code}{enhanced,colback=White,fonttitle=\sffamily\bfseries\large,valign=center
+,drop fuzzy shadow,sidebyside,lefthand ratio=0.4,lower separated=false}
+
+
+
+
+
+\begin{document}
+\title{QTeX: a LaTeX package for drawing quantum circuit (working in progress)}
+\author{Shenglong Xu}
+
+
+\begin{abstract}
+    This is a tutorial to demonstrate the usage of QTeX, a tikz-based latex library to draw quantum circuits.
+\end{abstract}
+
+\maketitle
+
+
+The main goal of this package is to provide a set of macros to draw quantum circuits using the simplest syntax with enough flexibility. The package is built on the two very useful packages tikz and xparse. The micros are divided into three classes, including circuit lines, gates and decorations. The package also provides an environment command that should enclose all the micros for a given circuit diagram. 
+The core feature is the gate drawing micros. These commands have a for-loop built-in. Therefore the users do not need to repeat the same command to draw the same gate at different locations. 
+
+
+Most gate commands follow the same input syntax:
+
+
+\begin{verbatim}
+\gatename[style][label][options]{xpos, ypos}
+\end{verbatim}
+The \verb|pos| input follows the format \verb|start;number;step|.
+The input \verb|number| and \verb|step| can be omitted.
+
+\section{Gallery}
+Before explaining the syntax of each command, let me first show a gallery of examples.
+
+\begin{Code}
+\begin{qlego}
+\grid{1}{1;9,0;4}
+\twoqubit[fill=MidnightBlue]{1;4;2, 1;2;2}
+\twoqubit[fill=Orange]{2;4;2, 2;2;2}
+\end{qlego}
+\tcblower
+\begin{verbatim}
+\gatename[style][label][options]{xpos, ypos}
+\end{verbatim}
+
+\end{Code}
+
+\begin{Code}
+\begin{qlego}
+\grid{7}{1;9,0}
+\swap{1;4;2,1;3;2}
+\swap{2;4;2,2;3;2}
+\end{qlego}
+\end{Code}
+
+\section{Usage}
+
+It is useful first to explain the coordinate system. The quantum circuit is viewed as a grid shown below. Each dot is specified by a coordinate $(x, y)$ where $x$, $y$ takes integer values. The unit length is by default 1cm. In most cases, an object in the circuit diagram is snapped to the grid from an input coordinate. 
+
+
+
+
+\end{document}
