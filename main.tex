@@ -33,7 +33,7 @@ breaklines=true
 }
 
 \newtcolorbox{Code}{enhanced,colback=White,fonttitle=\sffamily\bfseries\large,valign=center
-,drop fuzzy shadow,sidebyside,lefthand ratio=0.4,lower separated=false}
+,drop fuzzy shadow,sidebyside,lefthand ratio=0.5,lower separated=false}
 
 
 
@@ -68,24 +68,190 @@ The input \verb|number| and \verb|step| can be omitted.
 Before explaining the syntax of each command, let me first show a gallery of examples.
 
 \begin{Code}
-\begin{qlego}
-\grid{1}{1;9,0;4}
-\twoqubit[fill=MidnightBlue]{1;4;2, 1;2;2}
-\twoqubit[fill=Orange]{2;4;2, 2;2;2}
-\end{qlego}
+\begin{center}
+\begin{qtex}
+\grid{1}{1;8,0;4}
+\twoqubit[fill = MidnightBlue]{1;4;2, 1;2;2}
+\twoqubit[fill = Orange]{2;3;2, 2;2;2}
+\end{qtex}
+\end{center}
 \tcblower
-\begin{verbatim}
-\gatename[style][label][options]{xpos, ypos}
-\end{verbatim}
+\begin{lstlisting}
+\begin{qtex}
+    \grid{4}{1;8,0}
+    \twoqubit[fill = MidnightBlue]{1;4;2, 1;2;2}
+    \twoqubit[fill = Orange]{2;3;2, 2;2;2}
+\end{qtex}
+\end{lstlisting}
 
 \end{Code}
 
 \begin{Code}
-\begin{qlego}
-\grid{7}{1;9,0}
+\begin{qtex}
+\grid{6}{1;8,0}
 \swap{1;4;2,1;3;2}
-\swap{2;4;2,2;3;2}
-\end{qlego}
+\swap{2;3;2,2;2;2}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}
+    \grid{6}{1;8,0}
+    \swap{1;4;2,1;3;2}
+    \swap{2;3;2,2;2;2}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{qtex}
+\grid{6}{1;8,0}
+\varswap{1;4;2,1;3;2}
+\varswap{2;3;2,2;2;2}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}
+    \grid{6}{1;8,0}
+    \varswap{1;4;2,1;3;2}
+    \varswap{2;3;2,2;2;2}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{qtex}
+\grid{7}{1;8,0}
+\gate[fill=MidnightBlue][][2]{1;4;2,1;3;2}
+\gate[fill=MidnightBlue][][2]{2;3;2,2;3;2}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}
+    \grid{7}{1;8,0}
+    \gate[fill=MidnightBlue][][2]{1;4;2,1;3;2}
+    \gate[fill=MidnightBlue][][2]{2;3;2,2;3;2}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{center}
+\begin{qtex}[0.5]
+\grid{10}{1;8,0}
+\gate[fill=JungleGreen][][2]{1;4;2,1;3;4}
+\gate[fill=JungleGreen][][2]{2;3;2,3;2;4}
+\meter{1,2}\meter{3,2}\meter{4,2}\meter{7,2}
+\meter{1,4}\meter{2,4}\meter{5,4}\meter{6,4}
+\meter{2,6}\meter{6,6}\meter{8,6}
+\meter{1,8}\meter{2,8}\meter{4,8}\meter{5,8}
+\end{qtex}
+\end{center}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}[0.5]
+    \grid{10}{1;8,0}
+    \gate[fill=JungleGreen][][2]{1;4;2,1;3;4}
+    \gate[fill=JungleGreen][][2]{2;3;2,3;2;4}
+    \meter{1,2}\meter{3,2}\meter{4,2}\meter{7,2}
+    \meter{1,4}\meter{2,4}\meter{5,4}\meter{6,4}
+    \meter{2,6}\meter{6,6}\meter{8,6}
+    \meter{1,8}\meter{2,8}\meter{4,8}\meter{5,8}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{qtex}*
+\grid{7}{1;8,0}
+\gate[fill=MidnightBlue][][2]{1;4;2,1;3;2}
+\gate[fill=MidnightBlue][][2]{2;3;2,2;3;2}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}*
+    \grid{7}{1;8,0}
+    \gate[fill=MidnightBlue][][2]{1;4;2,1;3;2}
+    \gate[fill=MidnightBlue][][2]{2;3;2,2;3;2}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{qtex}*
+\grid{7}{1;8,0}
+\gate[][center:$U$][2]{1;4;2,1;3;2}
+\gate[][][2]{2;3;2,2;3;2}
+\meter{1;8,7}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}*
+    \grid{7}{1;8,0}
+    \gate[fill=MidnightBlue][center=$U$][2]{1;4;2,1;3;2}
+    \gate[fill=MidnightBlue][][2]{2;3;2,2;3;2}
+    \meter{1;8,7}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{qtex}
+\grid{7}{1;8,0}
+\gate[][][3]{1;2;3,1;2;3}
+\gate[][][3]{2;2;3,2;2;3}
+\gate[][][3]{3;2;3,3;2;3}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}
+    \grid{7}{1;8,0}
+    \gate[][][3]{1;2;3,1;2;3}
+    \gate[][][3]{2;2;3,2;2;3}
+    \gate[][][3]{3;2;3,3;2;3}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{qtex}
+\grid{7}{1;8,0}
+\ctrl[gate][[][][2]][1]{1;2;3,1;2;3}
+\ctrlr[gate][[][][2]][1]{2;2;3,2;2;3}
+\ctrl[gate][[][][2]][1]{3;2;3,3;2;3}
+\end{qtex}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}
+    \grid{7}{1;8,0}
+    \ctrl[gate][[][][2]][1]{1;2;3,1;2;3}
+    \ctrlr[gate][[][][2]][1]{2;2;3,2;2;3}
+    \ctrl[gate][[][][2]][1]{3;2;3,3;2;3}
+\end{qtex}
+\end{lstlisting}
+\end{Code}
+
+\begin{Code}
+\begin{center}
+\begin{qtex}
+\grid{5}{1;8,0}
+\gate[color=blue!50][][2]{1;4;2, 1;2;2}
+\gate[color=blue!50][][2]{2;3;2, 2;2;2}
+\grid{5}{1.2;8,0.2}
+\gate[color=orange!50][][2]{1.2;4;2, 1.2;2;2}
+\gate[color=orange!50][][2]{2.2;3;2, 2.2;2;2}
+\end{qtex}
+\end{center}
+\tcblower
+\begin{lstlisting}
+\begin{qtex}
+    \grid{5}{1;8,0}
+    \gate[color=blue!50][][2]{1;4;2, 1;2;2}
+    \gate[color=blue!50][][2]{2;3;2, 2;2;2}
+    \grid{5}{1.2;8,0.2}
+    \gate[color=orange!50][][2]{1.2;4;2, 1.2;2;2}
+    \gate[color=orange!50][][2]{2.2;3;2, 2.2;2;2}
+\end{qtex}
+\end{lstlisting}
 \end{Code}
 
 \section{Usage}
